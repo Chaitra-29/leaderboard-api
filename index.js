@@ -1,11 +1,12 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const serverless = require('serverless-http');
 var bodyParser = require('body-parser');
 const fetch = require('node-fetch');
-const app = express();
 const db = require('./db/db');
 const moment = require('moment');
+const app = express();
 
 const uiPORT = '8080';
 //configure
@@ -232,3 +233,6 @@ const payloadAthlete = (athlete) => {
     refreshToken: athlete.refresh_token,
   };
 };
+
+module.exports = app;
+module.exports.handler = serverless(app);

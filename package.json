@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "netlify-lambda build express",
     "start": "node index.js"
   },
   "author": "",
@@ -16,7 +17,9 @@
     "moment": "^2.29.1",
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.5",
-    "node-fetch": "^2.6.1"
+    "netlify-lambda": "^2.0.6",
+    "node-fetch": "^2.6.1",
+    "serverless-http": "^2.7.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

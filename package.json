@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "PORT=22403 node src/server.js",
+    "start": "node src/server.js",
     "start-local": "NODE_ENV='localhost' PORT=9000 node src/server.js",
     "heroku-prebuild": "npm i"
   },

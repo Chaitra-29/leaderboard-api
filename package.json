@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/netlify-lambda serve src ./node_modules/.bin/netlify-lambda serve src/db",
     "start": "NODE_ENV='localhost' PORT=9000 node src/server-local.js"
   },
   "author": "",
@@ -18,7 +17,6 @@
     "mongodb": "^3.6.6",
     "mongodb-client-encryption": "^1.2.3",
     "mongoose": "^5.12.5",
-    "netlify-lambda": "^1.6.3",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {

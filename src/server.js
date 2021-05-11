@@ -11,7 +11,9 @@ const router = express.Router();
 const clientID = '54287';
 const clientSecret = 'edee55f0ee48c484314874c9b18a33b5e4a135bf';
 let accessToken = '';
-
+router.get('/', (req, res) => {
+  res.send('<h1>Hello!</h1>')
+});
 router.get('/api/exchange_token', (req, res) => {
   const token = req.query.code;
   fetch(

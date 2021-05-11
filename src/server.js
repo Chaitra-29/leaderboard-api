@@ -2,32 +2,18 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const serverless = require('serverless-http');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const db = require('./db/db');
 const moment = require('moment');
 const app = express();
-
-const uiPORT = '8080';
-//configure
-const corsOptions = {
-  origin: `http://localhost:${uiPORT}`,
-};
-app.use(cookieParser());
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
-
-// set port, listen for requests
-const PORT = process.env.PORT || 3000;
-app.listen(PORT,'127.0.0.1', () => {
-  console.log(`Node.js app is listening at http://localhost:${PORT}`);
-});
+const router = express.Router();
 
 const clientID = '54287';
 const clientSecret = 'edee55f0ee48c484314874c9b18a33b5e4a135bf';
 let accessToken = '';
 
-app.get('/api/exchange_token', (req, res) => {
+router.get('/api/exchange_token', (req, res) => {
   const token = req.query.code;
   fetch(
     `https://www.strava.com/api/v3/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&code=${token}&grant_type=authorization_code`,
@@ -59,7 +45,7 @@ app.get('/api/exchange_token', (req, res) => {
     });
 });
 
-app.post('/api/refreshAccessToken', (req,res) => {
+router.post('/api/refreshAccessToken', (req,res) => {
   db.getAthletes(req.body).then((athlete) => {
   refreshToken(athlete._doc.refreshToken).then((athleteStravaData) =>{
       db.updateAthlete(
@@ -79,6 +65,7 @@ app.post('/api/refreshAccessToken', (req,res) => {
     })
   });
 });
+
 const refreshToken = (token) => {
   return fetch(
     `https://www.strava.com/api/v3/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&grant_type=refresh_token&refresh_token=${token}`,
@@ -90,7 +77,8 @@ const refreshToken = (token) => {
     }
   ).then((response) => response.json())
 };
-app.get('/api/refreshAccessTokens', (req, res) => {
+
+router.get('/api/refreshAccessTokens', (req, res) => {
   db.getAthletes().then((athletes) => {
     let promises = [];
     athletes.forEach((athlete) => {
@@ -131,7 +119,7 @@ app.get('/api/refreshAccessTokens', (req, res) => {
   });
 });
 
-app.get('/api/getClubDetails', (req,res) => {
+router.get('/api/getClubDetails', (req,res) => {
   const clubId = '675234';
   fetch(
     `https://www.strava.com/api/v3/clubs/${clubId}`,
@@ -147,7 +135,7 @@ app.get('/api/getClubDetails', (req,res) => {
   });
 })
 
-app.get('/api/getAthletes', (req, res) => {
+router.get('/api/getAthletes', (req, res) => {
   const query = req.query;
   if (Object.keys(query).length === 0) {
     db.getAthletes()
@@ -180,7 +168,7 @@ app.get('/api/getAthletes', (req, res) => {
   }
 });
 
-app.post('/api/athlete', (req, res) => {
+router.post('/api/athlete', (req, res) => {
   db.saveAthlete(payloadAthlete(req.body))
     .then((athlete) => {
       res.json({
@@ -196,7 +184,7 @@ app.post('/api/athlete', (req, res) => {
     });
 });
 
-app.get('/api/activities', (req, res) => {
+router.get('/api/activities', (req, res) => {
   db.getAthletes().then((athletes) => {
     let promises = [];
     athletes.forEach((athlete) => {
@@ -234,5 +222,15 @@ const payloadAthlete = (athlete) => {
   };
 };
 
+const uiPORT = '8080';
+//configure
+const corsOptions = {
+  origin: `http://localhost:${uiPORT}`,
+};
+app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+const routerPath = '/'//process.env.NODE_ENV === 'localhost' ? '/': '/';
+app.use(routerPath, router);
 module.exports = app;
 module.exports.handler = serverless(app);

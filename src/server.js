@@ -36,7 +36,8 @@ router.get('/api/exchange_token', (req, res) => {
         .then(() => {
           res.clearCookie();
           res.cookie('accessToken', accessToken,{ maxAge: 6*3600000});
-          res.redirect(`http://localhost:${uiPORT}/leaderboard`);
+          const redirectUrl = req.hostname === 'localhost' ? `http://localhost:${uiPORT}` : 'https://609a54a02a6732000746dc8d--vigorous-heisenberg-ce4939.netlify.app/';
+          res.redirect(`${redirectUrl}/leaderboard`);
         })
         .catch(() => {
         });

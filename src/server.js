@@ -233,4 +233,8 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 const routerPath = '/'//process.env.NODE_ENV === 'localhost' ? '/': '/';
 app.use(routerPath, router);
-module.exports = app;
+// set port, listen for requests
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`Node.js app is listening at http://localhost:${PORT}`);
+});

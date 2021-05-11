@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "PORT=9000 node src/server-local.js",
-    "start-local": "NODE_ENV='localhost' PORT=9000 node src/server-local.js"
+    "start": "PORT=22403 node src/server.js",
+    "start-local": "NODE_ENV='localhost' PORT=9000 node src/server.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,7 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const serverless = require('serverless-http');
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const db = require('./db/db');
@@ -233,4 +232,3 @@ app.use(bodyParser.json());
 const routerPath = '/'//process.env.NODE_ENV === 'localhost' ? '/': '/';
 app.use(routerPath, router);
 module.exports = app;
-module.exports.handler = serverless(app);

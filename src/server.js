@@ -35,7 +35,9 @@ router.get('/api/exchange_token', (req, res) => {
       db.saveAthlete(payloadAthlete(athleteStrava.athlete))
         .then(() => {
           res.clearCookie();
-          res.cookie('accessToken', accessToken,{ maxAge: 6*3600000});
+          res.cookie('accessToken', accessToken,{ maxAge: 6*3600000},{
+            sameSite: false
+        });
           const redirectUrl = req.hostname === 'localhost' ? `http://localhost:${uiPORT}` : 'https://secure-atoll-52053.herokuapp.com';
           res.redirect(`${redirectUrl}/route/leaderboard`);
         })
@@ -234,6 +236,12 @@ app.use(cookieParser());
 app.options('*', cors(corsOptions))
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://secure-atoll-52053.herokuapp.com");
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 const routerPath = '/'//process.env.NODE_ENV === 'localhost' ? '/': '/';
 app.use(routerPath, router);
 // set port, listen for requests

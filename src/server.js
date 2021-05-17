@@ -11,28 +11,10 @@ const router = express.Router();
 const clientID = '54287';
 const clientSecret = 'edee55f0ee48c484314874c9b18a33b5e4a135bf';
 let accessToken = '';
-const uiPORT = '8080';
-//configure
-const corsOptions = {
-  origin:"https://hidden-island-62961.herokuapp.com"
-  //origin: `http://localhost:${uiPORT}`,
-};
-app.use(cookieParser());
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
-const routerPath = '/'//process.env.NODE_ENV === 'localhost' ? '/': '/';
-app.use(routerPath, router);
-// set port, listen for requests
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Node.js app is listening at http://localhost:${PORT}`);
-});
-
-
 router.get('/', (req, res) => {
   res.send('<h1>Hello!</h1>')
 });
-router.get('/api/exchange_token',cors(corsOptions), (req, res) => {
+router.get('/api/exchange_token', (req, res) => {
   const token = req.query.code;
   fetch(
     `https://www.strava.com/api/v3/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&code=${token}&grant_type=authorization_code`,
@@ -65,7 +47,7 @@ router.get('/api/exchange_token',cors(corsOptions), (req, res) => {
     });
 });
 
-router.post('/api/refreshAccessToken',cors(corsOptions), (req,res) => {
+router.post('/api/refreshAccessToken', (req,res) => {
   db.getAthletes(req.body).then((athlete) => {
   refreshToken(athlete._doc.refreshToken).then((athleteStravaData) =>{
       db.updateAthlete(
@@ -98,7 +80,7 @@ const refreshToken = (token) => {
   ).then((response) => response.json())
 };
 
-router.get('/api/refreshAccessTokens', cors(corsOptions), (req, res) => {
+router.get('/api/refreshAccessTokens', (req, res) => {
   db.getAthletes().then((athletes) => {
     let promises = [];
     athletes.forEach((athlete) => {
@@ -155,7 +137,7 @@ router.get('/api/getClubDetails', (req,res) => {
   });
 })
 
-router.get('/api/getAthletes',cors(corsOptions), (req, res) => {
+router.get('/api/getAthletes', (req, res) => {
   const query = req.query;
   if (Object.keys(query).length === 0) {
     db.getAthletes()
@@ -188,7 +170,7 @@ router.get('/api/getAthletes',cors(corsOptions), (req, res) => {
   }
 });
 
-router.post('/api/athlete',cors(corsOptions), (req, res) => {
+router.post('/api/athlete', (req, res) => {
   db.saveAthlete(payloadAthlete(req.body))
     .then((athlete) => {
       res.json({
@@ -204,7 +186,7 @@ router.post('/api/athlete',cors(corsOptions), (req, res) => {
     });
 });
 
-router.get('/api/activities', cors(corsOptions), (req, res) => {
+router.get('/api/activities', (req, res) => {
   db.getAthletes().then((athletes) => {
     let promises = [];
     athletes.forEach((athlete) => {
@@ -241,3 +223,20 @@ const payloadAthlete = (athlete) => {
     refreshToken: athlete.refresh_token,
   };
 };
+
+const uiPORT = '8080';
+//configure
+const corsOptions = {
+  origin:"https://secure-atoll-52053.herokuapp.com"
+  //origin: `http://localhost:${uiPORT}`,
+};
+app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+const routerPath = '/'//process.env.NODE_ENV === 'localhost' ? '/': '/';
+app.use(routerPath, router);
+// set port, listen for requests
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Node.js app is listening at http://localhost:${PORT}`);
+});

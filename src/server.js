@@ -37,7 +37,7 @@ router.get('/api/exchange_token', (req, res) => {
           res.clearCookie();
           res.cookie('accessToken', accessToken,{ maxAge: 6*3600000});
           const redirectUrl = req.hostname === 'localhost' ? `http://localhost:${uiPORT}` : 'https://secure-atoll-52053.herokuapp.com';
-          res.redirect(`${redirectUrl}/leaderboard`);
+          res.redirect(`${redirectUrl}/route/leaderboard`);
         })
         .catch(() => {
         });
@@ -227,7 +227,8 @@ const payloadAthlete = (athlete) => {
 const uiPORT = '8080';
 //configure
 const corsOptions = {
-  origin: `http://localhost:${uiPORT}`,
+  origin:"https://hidden-island-62961.herokuapp.com"
+  //origin: `http://localhost:${uiPORT}`,
 };
 app.use(cookieParser());
 app.use(cors(corsOptions));

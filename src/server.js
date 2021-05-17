@@ -22,6 +22,7 @@ router.get('/api/exchange_token', (req, res) => {
       method: 'POST',
       headers: {
         accept: 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
     }
   )
@@ -75,6 +76,7 @@ const refreshToken = (token) => {
       method: 'POST',
       headers: {
         accept: 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
     }
   ).then((response) => response.json())
@@ -126,7 +128,7 @@ router.get('/api/getClubDetails', (req,res) => {
   fetch(
     `https://www.strava.com/api/v3/clubs/${clubId}`,
     {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}` }
     }
   ).then(response => response.json())
   .then((response) => {
